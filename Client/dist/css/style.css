@@ -1,0 +1,50 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+a {
+    color: blue;
+}
+
+h3 {
+    color: #d32323;
+}
+
+#closed {
+    font-size: 12px;
+    color: #d32323;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#money {
+    color: #41a700;
+}
+#ghost {
+    color: #999999;
+}
+
+#previewTable {
+
+    border-radius: 5px;
+    border: 1px solid #e6e6e6;
+    padding: 10px;
+    border-spacing: 5px;
+
+}
+
+#previewTableUnderline {
+    border-bottom: 1px solid #e6e6e6;
+}
+
+#infoTable {
+    text-transform: capitalize;
+    padding-bottom: 5px;
+    white-space: pre;
+}
+
+
+td {
+    padding-right: 10px;
+}
