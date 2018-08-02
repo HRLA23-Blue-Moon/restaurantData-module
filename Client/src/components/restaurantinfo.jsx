@@ -1,5 +1,16 @@
 import React from 'react';
 import axios from 'axios';
+import InfoBox from './infobox';
+import Hours from './hours';
+import MoreInfo from './moreinfo';
+import Styled from 'styled-components';
+
+const Div = Styled.div`
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+`;
+
+
 
 class RestaurantInfo extends React.Component {
     constructor(props){
@@ -40,6 +51,7 @@ class RestaurantInfo extends React.Component {
               }
         }
         this.getDate = this.getDate.bind(this);
+        this.showHours = this.showHours.bind(this);
     }
 
     getDate(){
@@ -62,7 +74,6 @@ class RestaurantInfo extends React.Component {
             var dayEnd = day.end;
 
             //accounting for single digit hours
-           
 
             if (day.start % 1200 >= 1)
             {
@@ -109,141 +120,46 @@ class RestaurantInfo extends React.Component {
             var arr = this.state.hours.concat({start: dayStart, end: dayEnd});
             this.setState({hours: arr});
         });
-        console.log('hours are: ', this.state.hours);
-    }
-
-    renderHours(){
-        if (this.state.hours[this.state.date])
-        {
-            return (
-                <div>
-                    Today <b>{this.state.hours[this.state.date].start} - {this.state.hours[this.state.date].end}</b><br />
-                    <div id="closed"><b>{this.state.isOpen}</b></div>
-                </div>
-            )
-        }
-        else{
-            return (
-                <div>
-                    None
-                </div>
-            )
-        }
-    }
-
-    renderAllHours(){
-        if (this.state.hours[0] && this.state.hours[1] && this.state.hours[2] && this.state.hours[3] && this.state.hours[4] && this.state.hours[5] && this.state.hours[6])
-        {
-            console.log('hours are: ', this.state.hours[0].start,this.state.hours[0].end);
-            return (
-                <div>
-                    <table id="hoursTable"> <tbody>
-                        <tr><td><b>Mon</b></td><td>{this.state.hours[0].start} - {this.state.hours[0].end}</td></tr>
-                        <tr><td><b>Tue</b></td><td>{this.state.hours[1].start} - {this.state.hours[1].end}</td></tr>
-                        <tr><td><b>Wed</b></td><td>{this.state.hours[2].start} - {this.state.hours[2].end}</td></tr>
-                        <tr><td><b>Thu</b></td><td>{this.state.hours[3].start} - {this.state.hours[3].end}</td></tr>
-                        <tr><td><b>Fri</b></td><td>{this.state.hours[4].start} - {this.state.hours[4].end}</td></tr>
-                        <tr><td><b>Sat</b></td><td>{this.state.hours[5].start} - {this.state.hours[5].end}</td></tr>
-                        <tr><td><b>Sun</b></td><td>{this.state.hours[6].start} - {this.state.hours[6].end}</td></tr>
-                    </tbody> </table>
-                </div>
-            )
-        }
-        else 
-        {
-            return(
-                <div>
-                    <table id="hoursTable">
-                        <tr><td><b>Mon     </b></td><td>closed</td></tr>
-                        <tr><td><b>Tue</b></td><td>closed</td></tr>
-                        <tr><td><b>Wed</b></td><td>closed</td></tr>
-                        <tr><td><b>Thu</b></td><td>closed</td></tr>
-                        <tr><td><b>Fri</b></td><td>closed</td></tr>
-                        <tr><td><b>Sat</b></td><td>closed</td></tr>
-                        <tr><td><b>Sun</b></td><td>closed</td></tr>
-                    </table>
-                </div> 
-            )
-        }  
-    }
-
-    renderInfo(){
-        console.log(this.state.restaurant.more_info);
-        if (this.state.restaurant.more_info){
-            return (
-                <table><tbody>
-                    {this.state.restaurant.more_info.map(item => 
-                        <tr>
-                            <td id="infoTable">
-                                {item[Object.keys(item)[1]].replace(/_/g, ' ')}  
-                                <b>  {item[Object.keys(item)[2]]}</b>
-                            </td>
-                        </tr>
-                    )}
-                </tbody></table>
-            )
-        }
-    }
-
-    renderPrice () {
-        let money = "$$$$";
-        return(
-            <div><b><span id="money">{this.state.restaurant.price}</span><span id="ghost">{money.substring(this.state.restaurant.price.length)}</span></b></div>
-        )
     }
 
     componentWillMount(){
-
         axios
             .get('api/restaurantList', {params: {restaurant: 'Gary Danko'}})
             .then(result => {
-                console.log(result.data);
                 this.setState({
                     restaurant: result.data[0],
                 });
-                console.log('tada', this.state.restaurant.hours.open[0].start);
                 this.getDate();
                 this.showHours();
             })
             .catch(err => {console.log('nononono'); console.error(err);})
-
     }
 
-    ComponentDidMount(){
-    }
 
     render(){
         return (
-            <div>
-                <div>
-                    <table id="previewTable"><tbody>
-                        <tr>
-                            <td><img src="https://crec.unl.edu/images/Icons/buttons_FIT_Clock.png" width="24" height="24"/> </td>
-                            <td id="previewTableUnderline">{this.renderHours()}</td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://d30y9cdsu7xlg0.cloudfront.net/png/689843-200.png" width="24" height="24"/> </td>
-                            <td id="previewTableUnderline"><a href={this.state.restaurant.menu}><b>Full Menu</b></a></td> 
-                        </tr>
-                        <tr>
-                            <td align="center">{this.renderPrice()}</td>
-                            <td>Price range <b>{this.state.restaurant.price_range}</b></td>
-                        </tr>
-                    </tbody></table>
-                </div>
+            <Div>
+                <InfoBox 
+                    date={this.state.date} 
+                    restaurant={this.state.restaurant} 
+                    hours={this.state.hours}
+                    isOpen={this.state.isOpen}
+                    showHours={this.showHours}
+                />
                 <br />
                 <div>
-                    <h3>Hours</h3>
-                    {this.renderAllHours()}
-                    <a href=""><img src="https://www.shareicon.net/download/2017/01/17/872771_edit_512x512.png" width="24" height="24"/>Edit business info</a>
+                    <Hours 
+                        hours={this.state.hours}
+                    />
                     <br />
                     <br />
-                    <h3>More business info</h3>
-                    {this.renderInfo()}
+                    <MoreInfo 
+                        restaurant={this.state.restaurant}
+                    />
                     <div>
                     </div>
                 </div>
-            </div>
+            </Div>
         ) 
     }
 }
