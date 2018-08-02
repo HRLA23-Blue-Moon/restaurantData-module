@@ -1,13 +1,11 @@
 const express = require('express');
 const bodyparser = require('body-parser');
 const path = require('path');
-const helmet = require('helmet');
 
-const connection = require('../Database/mongodb/index');
 const router = require('./router');
 
 const server = express();
-const port = 3005;
+const port = 3000;
 
 server.use(bodyparser.json());
 server.use(bodyparser.urlencoded({ extended: true}));

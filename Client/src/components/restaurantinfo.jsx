@@ -11,7 +11,6 @@ const Div = Styled.div`
 `;
 
 
-
 class RestaurantInfo extends React.Component {
     constructor(props){
         super(props)
@@ -52,6 +51,12 @@ class RestaurantInfo extends React.Component {
         }
         this.getDate = this.getDate.bind(this);
         this.showHours = this.showHours.bind(this);
+    }
+
+    populateData(){
+        axios
+        .post('api/restaurantList')
+        .catch(err => {console.log('nononono Post'); console.error(err);})
     }
 
     getDate(){
@@ -132,13 +137,28 @@ class RestaurantInfo extends React.Component {
                 this.getDate();
                 this.showHours();
             })
-            .catch(err => {console.log('nononono'); console.error(err);})
+            .catch(err => {
+                this.populateData().then(() => {
+                    axios
+                    .get('api/restaurantList', {params: {restaurant: 'Gary Danko'}})
+                    .then(result => {
+                        this.setState({
+                            restaurant: result.data[0],
+                        });
+                        this.getDate();
+                        this.showHours();
+                })
+            }); 
+            console.log('nononono'); console.error(err);})
     }
 
 
     render(){
         return (
             <Div>
+                {/* UNCOMMENT THE BUTTON BELOW TO POPULATE DATA */}
+                {/* <button onClick={this.populateData}> Populate Data </button> */}
+
                 <InfoBox 
                     date={this.state.date} 
                     restaurant={this.state.restaurant} 
@@ -160,6 +180,7 @@ class RestaurantInfo extends React.Component {
                     </div>
                 </div>
             </Div>
+
         ) 
     }
 }
