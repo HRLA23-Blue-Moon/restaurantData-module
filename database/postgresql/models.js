@@ -2,20 +2,19 @@ const Sequelize = require('sequelize');
 const connection = require('./index.js');
 
 const RestaurantData = connection.define('list', {
-  alias: {
-    type: Sequelize.STRING
-  },
   name: {
     type: Sequelize.STRING
-  },  
+  },
   menu: Sequelize.STRING,
   is_closed: Sequelize.BOOLEAN,
   url: Sequelize.STRING,
   price: Sequelize.STRING,
-  health_score: Sequelize.STRING,
-  more_info: [
+  health_score: Sequelize.NUMBER,
+});
 
-  ],
+  // more_info: [
+
+  // ],
   // hours: {
   //   hours_type: Sequelize.STRING,
   //   open: [{
@@ -26,7 +25,6 @@ const RestaurantData = connection.define('list', {
   //   }],
   //   is_open_now: Sequelize.BOOLEAN
   // }
-});
 
 connection.sync({
     force: false
